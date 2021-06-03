@@ -25,6 +25,9 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      
+      - name: Copy .env
+        run: cp .env.example .env
 
       - name: npm install
         run: npm install
