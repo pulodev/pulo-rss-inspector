@@ -9,6 +9,8 @@ on:
 jobs:
   update-new-rss-content:
     runs-on: ubuntu-latest
+    env:
+      ADMIN_CUSTOM_KEY: ${{ secrets.ADMIN_CUSTOM_KEY }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1

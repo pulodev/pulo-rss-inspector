@@ -4,6 +4,7 @@ const parser = new Parser();
 const fetch = require('node-fetch');
 
 const BASE_API_URL =  process.env.BASE_API_URL
+const ADMIN_CUSTOM_KEY =  process.env.ADMIN_CUSTOM_KEY
 
 async function inspectFeed() {
 	try{
@@ -59,7 +60,10 @@ async function updateRSS(rss_lists) {
         	//insert bulk items
         	fetch(`${BASE_API_URL}/store/content`, {
 		        		method: 'POST',
-		        		body: JSON.stringify({items: NEW_ITEMS}),
+		        		body: JSON.stringify({
+		        			items: NEW_ITEMS,
+		        			secret_code: ADMIN_CUSTOM_KEY
+		        		}),
 		        		headers: {
 						   'Content-Type': 'application/json',
 						 },
@@ -74,6 +78,7 @@ async function updateRSS(rss_lists) {
 		        		body: JSON.stringify({
 		        			last_checked_at: new Date(feed.lastBuildDate),
 		        			id: currentRSS.id,
+		        			secret_code: ADMIN_CUSTOM_KEY
 		        		}),
 		        		headers: {
 						   'Content-Type': 'application/json',
