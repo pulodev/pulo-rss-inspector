@@ -25,6 +25,7 @@ async function updateRSS(rss_lists) {
         let feed = null
         try {
         	feed = await parser.parseURL(currentRSS.url);
+        	console.log('Parsing RSS from : ' + currentRSS.title)
         }catch(err) {
         	console.log('Error parsing RSS: ' + currentRSS.url) 
         	console.log(err)
@@ -33,10 +34,18 @@ async function updateRSS(rss_lists) {
 
         let NEW_ITEMS = []    
         //New update   
-            //if rss build date later than last checked
-        if(new Date(feed.lastBuildDate) > new Date(currentRSS.last_checked_at)) {
+            //if rss build date later than last checked 
+            //some RSS have no lastbuildtime
+
+        let latestBuilt = new Date(feed.lastBuildDate) || new Date(feed.updated)
+            
+        if(latestBuilt > new Date(currentRSS.last_checked_at)
+        	|| feed.lastBuildDate == undefined) {
+        	console.log(`New build from RSS ${currentRSS.title} since last time` )
+
             feed.items.forEach(item => {
-                let published_at = item.pubDate || item.isoDate
+                let published_at = item.pubDate || item.isoDate || item.pubDate || item.published
+               
                 //check item time
                 if(new Date(published_at) > new Date(currentRSS.last_checked_at)) {
                     //prepare items to be inserted
@@ -76,7 +85,7 @@ async function updateRSS(rss_lists) {
 			fetch(`${BASE_API_URL}/updatetime/source`, {
 		        		method: 'POST',
 		        		body: JSON.stringify({
-		        			last_checked_at: new Date(feed.lastBuildDate),
+		        			last_checked_at: new Date(),
 		        			id: currentRSS.id,
 		        			secret_code: ADMIN_CUSTOM_KEY
 		        		}),
