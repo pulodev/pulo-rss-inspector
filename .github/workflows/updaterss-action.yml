@@ -36,3 +36,5 @@ jobs:
         
       - name: Inspect new RSS feed
         run: npm run inspect 
+        
+      - uses: gautamkrishnar/keepalive-workflow@master
